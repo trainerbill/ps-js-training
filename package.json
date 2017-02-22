@@ -1,0 +1,35 @@
+{
+  "name": "ps-js-training",
+  "version": "1.0.0",
+  "description": "Training App for PS JS 2017 Training",
+  "main": "dist/index.js",
+  "scripts": {
+    "test": "npm test",
+    "clean": "rm -rf dist",
+    "build": "npm run clean && babel src -d dist --copy-files",
+    "build:watch": "npm run clean && babel src -d dist --copy-files",
+    "start": "npm run build && node dist/index.js",
+    "start:dev": "supervisor -w src/ -- -r 'babel-register' src/index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/trainerbill/ps-js-training.git"
+  },
+  "author": "Andrew Throener",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/trainerbill/ps-js-training/issues"
+  },
+  "homepage": "https://github.com/trainerbill/ps-js-training#readme",
+  "dependencies": {
+    "braintree": "^2.0.2",
+    "kraken-js": "^2.1.0",
+    "paypal-classic-api": "^1.2.1",
+    "paypal-rest-sdk": "^1.7.1",
+    "supervisor": "^0.12.0"
+  },
+  "devDependencies": {
+    "babel-cli": "^6.23.0",
+    "babel-preset-env": "^1.1.8"
+  }
+}
