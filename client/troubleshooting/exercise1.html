@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="en" ng-app>
+  <head>
+    <title>Troubleshooting</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  </head>
+  <body class="container">
+    <div class="row">
+      <div class="col-md-12">
+        <h3>Exercise 1</h3>
+
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+
+    <!-- PayPal Script -->
+    <script src="lib/raw/checkout.js" data-version-4></script>
+
+    <script>
+        // Start Checkout.js Javascript
+        paypal.Button.render({
+            env: 'sandbox',
+            payment: function(resolve, reject) {
+                // This function needs to return/resolve an EC Token, Pay-ID, or billing agreement ID.
+                // If you want to test checkout.js with our own Token uncomment the line below and add your token
+                // return resolve('EC-01N93346XG392122L');
+                $.get('http://166.78.8.98/cgi-bin/aries.cgi?sandbox=1&ajax=1&tokenonly=1&returnurl=http://166.78.8.98/cgi-bin/return.htm&cancelurl=http://166.78.8.98/cgi-bin/cancel.htm&onlytoken=1')
+                    .done(function (token) {
+                        resolve(token);
+                    })
+                    .fail(function (err) {
+                        console.log('AjaxError', err);
+                        reject(err);
+                    });
+            },
+            commit: false,
+            onAuthorize: function(data, actions) {
+                // This function needs to return a promise.  Overlay disappears when this Promise resolves.
+                // Search chrome dev tools console tab for "onAuthorize:" to see what I am
+                console.log('onAuthorize:', data, actions);
+                
+                // Redirect to RETURNURL
+                return actions.redirect();
+            },
+            onCancel: function(data, actions) {
+                // Search chrome dev tools console tab for "Cancelled:" to see what I am
+                console.log('Cancelled:', data);
+                // Redirect to CANCELURL
+                return actions.redirect();
+            }
+        }, '#paypal-button');
+    </script>
+    <h1>Classic Integration</h1>
+    <p>This example will redirect to the RETURN/CANCEL Urls.</p>
+    <div id="paypal-button"></div>
+    <a href="index.html">Go Back</a>
+        
+      </div>
+    </div>
+
+  </body>
+</html>
