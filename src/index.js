@@ -32,7 +32,10 @@ app.use(kraken(krakenOpts));
 
 app.use(express.static(path.resolve(__dirname, '../client')));
 
-let server = app.listen(8080);
+let port = process.env.PORT || 8080;
+let ip = process.env.IP || '0.0.0.0';
+
+let server = app.listen(port, ip);
 
 server.on('listening', () => {
     console.log('Server running on ' + server.address().address + ' on port ' + server.address().port + '!');
