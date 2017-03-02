@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="en" ng-app>
+  <head>
+    <title>Login Page</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <script src="//spin.js.org/spin.min.js"></script>
+    <script src="../lib/postRobot.js"></script> <!-- https://github.com/krakenjs/post-robot -->
+  </head>
+  <body class="container">
+    <div class="row">
+      <div class="col-md-12">
+        <h3>Login</h3>
+        <div id="spinner" style="display:none"></div>
+        <form id="loginForm">
+            <div class="form-group">
+                <label for="exampleInputEmail1">Email address</label>
+                <input type="email" class="form-control" id="exampleInputEmail1" placeholder="Email" name="email">
+            </div>
+            <div class="form-group">
+                <label for="exampleInputPassword1">Password</label>
+                <input type="password" class="form-control" id="exampleInputPassword1" placeholder="Password" name="password">
+            </div>
+            
+            <button id="submitButton" type="submit" class="btn btn-default">Submit</button>
+        </form>
+
+        <script type="text/javascript">
+          // Function to receive the event.  Should check the type property of the message and act accordingly.
+          // When type is email it should set the email input to the value of the message property
+          postRobot.on('email', function(event) {
+              document.getElementById('exampleInputEmail1').value = event.data.message;
+          });
+        </script>
+
+        <script type="text/javascript">
+          $(document).ready(function() {
+            var spinner = new Spinner().spin();
+            $('#spinner').html(spinner.el);
+            $('#submitButton').click(function (event) {
+              event.preventDefault();
+              $('#loginForm').hide();
+              $('#spinner').show();
+              // Mock processing time for spinner
+              setTimeout(function () {
+                
+                // Send login success message.
+                var message = {
+                  message: 'success',
+                  email: document.getElementById('exampleInputEmail1').value
+                };
+
+                postRobot.send(window.parent, 'onLogin', message);
+                
+              }, 2000);
+            });
+          });
+        </script>
+        
+        
+
+      </div>
+    </div>
+  </body>
+</html>

@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="en" ng-app>
+  <head>
+    <title>Login Page</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="../lib/postRobot.js"></script> <!-- https://github.com/krakenjs/post-robot -->
+  </head>
+  <body class="container">
+    <div class="row">
+      <div class="col-md-12">
+        <div id="postRobotMessaging">
+          <h2>PostRobot Messaging</h2>
+        </div>
+        <hr />
+        <div id="iframeContainer"></div>
+        <div id="loginStatus"></div>
+        <a href="index.html">Go Back</a>
+      </div>
+    </div>
+
+    <script type="text/javascript">
+
+      var iframe = document.createElement('iframe');
+      iframe.height = '400px';
+      iframe.width = '400px';
+      iframe.src = 'our-login.html';
+
+      iframe.onload = function () {
+
+        var message = {
+          type: 'email',
+          message: 'test@awesome.com'
+        };
+
+        // Exercise: use post-robot to send the message.
+        //iframe.contentWindow.postMessage(JSON.stringify(message), '*');
+
+        var message1 = document.createElement('div');
+        var text1 = document.createTextNode('Sending Email Message');
+        message1.appendChild(text1);
+
+        var message2 = document.createElement('div');
+        var text2 = document.createTextNode('Email Message Received');
+        message2.appendChild(text2);
+
+        document.getElementById('postRobotMessaging').appendChild(message1);
+        postRobot.send(iframe.contentWindow, 'email', message).then(function(event) {
+            document.getElementById('postRobotMessaging').appendChild(message2);
+        });
+
+      };
+
+      document.getElementById('iframeContainer').appendChild(iframe);
+    </script>
+
+    <script type="text/javascript">
+      var message3 = document.createElement('div');
+      var text3 = document.createTextNode('Login Message Received');
+      message3.appendChild(text3);
+
+      var message4 = document.createElement('div');
+      var text4 = document.createTextNode('Email Message Received');
+      message4.appendChild(text4);
+      
+      postRobot.on('onLogin', function(event) {
+        document.getElementById('postRobotMessaging').appendChild(message3);
+        document.getElementById('iframeContainer').style.display = 'none';
+        document.getElementById('loginStatus').textContent = 'logged in as ' + event.data.email;
+        document.getElementById('loginStatus').style.display = 'block';
+      });
+    </script>
+
+    
+  </body>
+</html>
