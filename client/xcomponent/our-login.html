@@ -6,7 +6,8 @@
     <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
     <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
     <script src="//spin.js.org/spin.min.js"></script>
-    <script src="../lib/post-robot.js"></script> <!-- https://github.com/krakenjs/post-robot -->
+    <script src="../lib/xcomponent.js"></script>
+    <script src="login-component.js"></script> 
     <script src="../lib/helpers.js"></script>
   </head>
   <body class="container">
@@ -33,15 +34,11 @@
           var user = new User(localStorage.getItem('user'));
           // END Exercise Setup.
           
-
-          
-
-
-          // Create a listener using postRobot to listen for the email message
-          // Set the exampleInputEmail1 input equal to the message value
-          postRobot.on('email', function(event) {
-              document.getElementById('exampleInputEmail1').value = event.data.message;
-          });
+          // Figure out where to get the xcomponent properties
+          // Use xcomponent to prefill email input
+          if (window.xchild.props.email) {
+              document.getElementById('exampleInputEmail1').value = window.xchild.props.email;
+          }
 
           document.getElementById('submitButton')
             .addEventListener('click', function (event) {
@@ -57,8 +54,8 @@
                 // Call user login function with email
                 user.login(document.getElementById('exampleInputEmail1').value);
 
-                // Send user as message to parent
-                postRobot.send(window.parent, 'onLogin', user);
+                // Call xcomponent onLogin 
+                window.xchild.props.onLogin(user);
 
                 
                 hideDom('spinner');
@@ -68,12 +65,11 @@
             });
 
 
-            // Create a listener for getUser using postRobot
-            // Send the user object as the message
-            postRobot.on('getUser', function(event) {
-                return user;
-            });
-
+            // Use xcomponent to send user to the parent
+            if (window.xchild.props.getUser) {
+                window.xchild.props.getUser(user);
+            }
+              
         </script>
 
       </div>

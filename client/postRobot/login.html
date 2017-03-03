@@ -4,73 +4,102 @@
     <title>Login Page</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-    <script src="../lib/postRobot.js"></script> <!-- https://github.com/krakenjs/post-robot -->
+    <script src="../lib/post-robot.js"></script> <!-- https://github.com/krakenjs/post-robot -->
+    <script src="../lib/helpers.js"></script>
   </head>
   <body class="container">
     <div class="row">
       <div class="col-md-12">
-        <div id="postRobotMessaging">
-          <h2>PostRobot Messaging</h2>
+        <div id="exerciseOutput">
+          <h2>Exercise Output</h2>
         </div>
         <hr />
-        <div id="iframeContainer"></div>
-        <div id="loginStatus"></div>
+        <div id="loginContainer"></div>
+        <div id="userInformation" style="display:none">
+          <div id="userEmail"></div>
+          <div id="userName"></div>
+          <button id="logoutButton" class="btn btn-default">Log Out</button>
+        </div>
         <a href="index.html">Go Back</a>
       </div>
     </div>
 
     <script type="text/javascript">
 
+      // Exercise Setup.  You should not need to change anything here 
       var iframe = document.createElement('iframe');
+      iframe.id = 'app-iframe';
       iframe.height = '400px';
       iframe.width = '400px';
       iframe.src = 'our-login.html';
+      document.getElementById('loginContainer').appendChild(iframe);
 
-      iframe.onload = function () {
-
-        var message = {
-          type: 'email',
-          message: 'test@awesome.com'
-        };
-
-        // Exercise: use post-robot to send the message.
-        //iframe.contentWindow.postMessage(JSON.stringify(message), '*');
-
-        var message1 = document.createElement('div');
-        var text1 = document.createTextNode('Sending Email Message');
-        message1.appendChild(text1);
-
-        var message2 = document.createElement('div');
-        var text2 = document.createTextNode('Email Message Received');
-        message2.appendChild(text2);
-
-        document.getElementById('postRobotMessaging').appendChild(message1);
-        postRobot.send(iframe.contentWindow, 'email', message).then(function(event) {
-            document.getElementById('postRobotMessaging').appendChild(message2);
-        });
-
+      var emailMessage = {
+        message: 'test@awesome.com'
       };
 
-      document.getElementById('iframeContainer').appendChild(iframe);
-    </script>
+      var user;
+      // End Setup
 
-    <script type="text/javascript">
-      var message3 = document.createElement('div');
-      var text3 = document.createTextNode('Login Message Received');
-      message3.appendChild(text3);
+  
+      // Use addOutput function to add message 'Sending Email Message'
+      addOutput('Sending Email Message');
 
-      var message4 = document.createElement('div');
-      var text4 = document.createTextNode('Email Message Received');
-      message4.appendChild(text4);
-      
+      // Send the emailMessage object to iframe using postRobot
+      // Use addOutput fucntion to add message 'Received Email Message' when the message has been received
+      postRobot.send(iframe, 'email', emailMessage)
+        .then(function(event) {
+            addOutput('Received Email Message');
+        });
+
+      // Listen for onLogin message from iframe
+      // Use addOutput to add 'onLogin Message Received'
+      // Set user variable equal to the response
       postRobot.on('onLogin', function(event) {
-        document.getElementById('postRobotMessaging').appendChild(message3);
-        document.getElementById('iframeContainer').style.display = 'none';
-        document.getElementById('loginStatus').textContent = 'logged in as ' + event.data.email;
-        document.getElementById('loginStatus').style.display = 'block';
+        addOutput('onLogin Message Received');
+        user = event.data;
+        displayUserInformation(user);
       });
+
+      // addOutput 'Sending getUser Message'
+      // Send measse getUser using post robot
+      // Set user variable to the response
+      // User is logged in if email is not undefined
+      // If logged in execute displayUserInformation function otherwise execute displayLoginContainer function
+      // If not logged in hide login status, show iframe
+      addOutput('Sending getUser Message');
+      postRobot.send(iframe, 'getUser')
+        .then(function(event) {
+            addOutput('Received getUser Message');
+            user = event.data;
+            
+            if (user.email) {
+              displayUserInformation(user);
+            } else {
+              displayLoginContainer();
+            }
+              
+        });
+
+
+
+      // Add Logout Onclick event
+      // addOutput 'Sending Logout Message'
+      // Execute user logout function
+      // on response addOutput 'Received Logout Message', set the global user to the event data, and execute displayLoginContainer
+      document.getElementById('logoutButton')
+        .addEventListener('click', function (event) {
+          addOutput('Sending Logout Message');
+          user
+            .logout()
+            .then(function (response) {
+              addOutput('Received Logout Message');
+              user = event.data;
+              displayLoginContainer();
+            });  
+        });
+
     </script>
 
-    
   </body>
 </html>

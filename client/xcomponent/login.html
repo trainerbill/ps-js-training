@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="en" ng-app>
+  <head>
+    <title>Login Page</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="../lib/xcomponent.js"></script> <!-- https://github.com/krakenjs/xcomponent -->
+    <script src="../lib/helpers.js"></script>
+    <script src="login-component.js"></script> <!-- Pretend this is pulled in from our companys server -->
+  </head>
+  <body class="container">
+    <div class="row">
+      <div class="col-md-12">
+        <div id="exerciseOutput">
+          <h2>Exercise Output</h2>
+        </div>
+        <hr />
+        <div id="loginContainer"></div>
+        <div id="userInformation" style="display:none">
+          <div id="userEmail"></div>
+          <div id="userName"></div>
+          <button id="logoutButton" class="btn btn-default">Log Out</button>
+        </div>
+        <a href="index.html">Go Back</a>
+      </div>
+    </div>
+
+    <script type="text/javascript">
+
+      // Exercise Setup
+      var globalUser;
+      // END Setup
+
+      // Render the login component into the loginContainer id
+      // set email property
+      // set onLogin property, call display user information, set globalUser to response
+      // set getUser, check if response.email then user is logged in.  Display coreect information. Set global user equal to response  
+      LoginComponent.render({
+          email: 'test@awesome.com',
+          onLogin: function(user) {
+              displayUserInformation(user);
+              globalUser = user;
+          },
+          getUser: function(user) {
+            if (user.email) {
+              displayUserInformation(user);
+            } else {
+              displayLoginContainer();
+            }
+            globalUser = user;
+          }
+
+      }, '#loginContainer');
+
+      // Set Logout onclick
+      // Call globalUser logout
+      // Display login container
+      document
+        .getElementById('logoutButton')
+        .addEventListener('click', function (event) {
+          globalUser
+            .logout()
+            .then(function () {
+              displayLoginContainer();
+            });
+        });
+      
+
+    </script>
+
+  </body>
+</html>

@@ -4,17 +4,28 @@
     <title>Login Page</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="../lib/helpers.js"></script>
   </head>
   <body class="container">
     <div class="row">
       <div class="col-md-12">
-        <div id="iframeContainer"></div>
-        <div id="loginStatus"></div>
+        <div id="exerciseOutput">
+          <h2>Exercise Output</h2>
+        </div>
+        <hr />
+        <div id="loginContainer"></div>
+        <div id="userInformation" style="display:none">
+          <div id="userEmail"></div>
+          <div id="userName"></div>
+          <button id="logoutButton" class="btn btn-default">Log Out</button>
+        </div>
         <a href="index.html">Go Back</a>
       </div>
     </div>
 
     <script type="text/javascript">
+
+      //Exercise Setup.  Do Not Touch
 
       // Create an Iframe
       var iframe = document.createElement('iframe');
@@ -22,32 +33,53 @@
       iframe.width = '400px';
       iframe.src = 'our-login.html';
 
-      // When our iframe is loaded
-      iframe.onload = function () {
+      document.getElementById('loginContainer').appendChild(iframe);
 
-        // The message
-        var message = {
-          type: 'email',
-          message: 'test@awesome.com'
-        };
+      
 
-        //Wait for frame to load and send message
-        iframe.contentWindow.postMessage(JSON.stringify(message), '*');
-
+      // The Email message
+      var emailMessage = {
+        type: 'email',
+        message: 'test@awesome.com'
       };
 
-      document.getElementById('iframeContainer').appendChild(iframe);
-    </script>
+      var user;
 
-    <script type="text/javascript">
-      window.addEventListener('message', function (msg) {
-        console.log(msg);
-        var data = JSON.parse(msg.data);
-        document.getElementById('iframeContainer').style.display = 'none';
-        document.getElementById('loginStatus').textContent = 'logged in as ' + data.email;
-        document.getElementById('loginStatus').style.display = 'block';
+      //END SETUP
+      
+      // When our iframe is loaded
+      iframe.onload = function () {
+        // use addOutput function to add the text 'Sending Email Message' to the DOM.
+        // Send the message variable to the iframe.
+        // The message must be a string.
+        // Use "*" as the domain
+        addOutput('Sending Email Message');
+        iframe.contentWindow.postMessage(JSON.stringify(emailMessage), '*');
+      };
+
+      // Create a window Event Listener for 'message';
+      // Parse the event data into a new variable named data.
+      // Check the type property of the new data variable
+      // If the type is "email", use addOutput function to add the text 'Received Email Message' to the DOM.
+      // Otherwise if the type is "onLogin", 
+        //call display user information function with the user property. 
+        //use addOutput function to add the text 'Received onLogin Message' to the DOM.
+      
+      
+      window.addEventListener('message', function (event) {
+        var data = JSON.parse(event.data);
+  
+        if (data.type === 'email') {
+          addOutput('Received Email Message');
+        } else if (data.type === 'onLogin') {
+          addOutput('Received onLogin Message');
+          displayUserInformation(data.user);
+        }
         
       });
+
+      
     </script>
+
   </body>
 </html>
