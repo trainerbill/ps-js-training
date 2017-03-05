@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<head>
+
+</head>
+
+<body>
+
+    <script src="../lib/helpers.js"></script>
+
+    <!-- PayPal Script -->
+    <script src="https://www.paypalobjects.com/api/checkout.js" data-version-4></script>
+
+    <script>
+        // Exercise Setup
+        function createPayment() {
+            return paypal.rest.payment.create(this.props.env, this.props.client, {
+                transactions: [
+                    {
+                        amount: {
+                            total:    '1.00',
+                            currency: 'USD'
+                        }
+                    }
+                ]
+            }); 
+        }
+
+        function executePayment(data, actions) {
+            return actions
+                    .payment
+                    .execute()
+                    .then(function (result) {
+                        document.getElementById('paypal-execute-details').textContent = JSON.stringify(result, null, 2);
+                        showDom('paypal-end');
+                    });
+        }
+
+        function onCancel() {
+            showDom('paypal-cancel');
+        }
+
+        function onError(err) {
+            document.getElementById('error-message').textContent = err.message;
+            showDom('paypal-error');
+        }
+        // END Setup
+
+        // Create a function to execute payment get and return the promise. Then:
+            // Place entire response in the paypal-details DOM id
+            // Place the first name, last name, and street from the response in the confirmation form.
+            // Show the confirmation DOM id
+        
+        function getPayment(data, actions) {
+            return actions
+                    .payment
+                    .get()
+                    .then(function (data) {
+                        document.getElementById('paypal-details').textContent = JSON.stringify(data, null, 2);
+                        document.getElementById('firstName').value = data.payer.payer_info.first_name;
+                        document.getElementById('lastName').value = data.payer.payer_info.last_name;
+                        document.getElementById('street').value = data.payer.payer_info.shipping_address.line1;
+                        showDom('paypal-confirmation');
+                    });
+        }
+
+        // Create a function executeSetup.
+            // Use paypal library to return a new promise.
+            // Create click event listener and attach it to the submitButton DOM id
+                // Remember to prevent default.
+                // execute payment.
+            // resolve the promise immediatley after setting the on click event
+
+        function executeSetup(data, actions) {
+            return new paypal.Promise(function (resolve, reject) {
+                document
+                    .getElementById('submitButton')
+                    .addEventListener('click', function (event) {
+                        event.preventDefault();
+                        return executePayment(data, actions);
+                    });
+                resolve();
+            });
+        }
+        
+        // Use paypal.Promise.all to execute the newly created functions at the same time
+        // Pro Tip: the one argument to all function is an array of promises
+        // return the result of the all function
+        function onAuthorize(data, actions) {
+            return paypal.Promise.all([executeSetup(data, actions), getPayment(data, actions)]);
+        }
+    
+
+        // You shouldn't need to do anything below this.
+        paypal.Button.render({
+            env: 'sandbox',
+            client: {
+                sandbox:    'AQzwHJt9jZAyQbf-DnaqZefvbTCMammV7ZFsnW23thr9qUQX9RGMgSVbzRjxXTAODKjh2W0k6Ei4Q2m9'
+            },
+            payment: createPayment,
+            onAuthorize: onAuthorize,
+            onCancel: onCancel,
+            onError: onError,
+            style: {
+                size: 'medium',
+                color: 'yellow',
+                shape: 'rect'
+            }
+        }, '#paypal-button');
+
+    </script>
+    <div id="paypal-error" style="display:none">
+        <h2>Whoopsie Daisy</h2>
+        <div>We seem to have a problem here</div>
+        <pre id="error-message"></pre>
+    </div>
+    <div id="paypal-cancel" style="display:none">
+        <h2>We are severly disappointed</h2>
+        <div>You shuold definitely click the paypal button again</div>
+    </div>
+    <div id="paypal-button"></div>
+    <pre id="paypal-details" style="display:none"></pre>
+    <div id="paypal-confirmation" style="display:none">
+        <h2>Confirmation</h2>
+        <form id="confirmationForm">
+            <div class="form-group">
+                <label for="firstName">First Name</label>
+                <input type="text" class="form-control" id="firstName" placeholder="First Name" name="firstName" disabled>
+            </div>
+            <div class="form-group">
+                <label for="lastName">Last Name</label>
+                <input type="text" class="form-control" id="lastName" placeholder="Last Name" name="lastName" disabled>
+            </div>
+            <div class="form-group">
+                <label for="street">Street</label>
+                <input type="text" class="form-control" id="street" placeholder="Street" name="street" disabled>
+            </div>
+            
+            <button id="submitButton" type="submit" class="btn btn-default">Place Order</button>
+        </form>
+    </div>
+    <div id="paypal-end" style="display:none">
+        <h2>Yay your payment is complete</h2>
+        <pre id="paypal-execute-details"></pre>
+    </div>
+    </div>
+    <a href="index.html">Go Back</a>
+</body>
+</html>

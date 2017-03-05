@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<head>
+
+</head>
+
+<body>
+
+    <script src="../lib/helpers.js"></script>
+
+    <!-- PayPal Script -->
+    <script src="https://www.paypalobjects.com/api/checkout.js" data-version-4></script>
+
+    <script>
+        // Exercise Setup
+        function onError(err) {
+            document.getElementById('error-message').textContent = err.message;
+            showDom('paypal-error');
+        }
+
+        function setExpressCheckout() {
+            return paypal
+                    .request
+                    .get('/paypal/classic/setexpresscheckout')
+                    .then(function (data) {
+                        return data.TOKEN;
+                    });
+        }
+        // END Setup
+        
+
+        
+        // Create an onAutorize Callback function
+            // Use actions to redirect the user to the RETURNURL
+            // You should return a function execution
+        function onAuthorize(data, actions) {
+            return actions.redirect();
+        }
+
+        // Create an onCancel Callback function
+            // Use actions to redirect the user to the CANCELURL
+            // You should return a function execution
+        function onCancel(data, actions) {
+            return actions.redirect();
+        }
+    
+
+        // Call the correct functions in the correct event callbacks
+        paypal.Button.render({
+            env: 'sandbox',
+            payment: setExpressCheckout,
+            onAuthorize: onAuthorize,
+            onCancel: onCancel,
+            onError: onError,
+            style: {
+                size: 'medium',
+                color: 'yellow',
+                shape: 'rect'
+            }
+        }, '#paypal-button');
+
+    </script>
+    <div id="paypal-error" style="display:none">
+        <h2>Whoopsie Daisy</h2>
+        <div>We seem to have a problem here</div>
+        <pre id="error-message"></pre>
+    </div>
+    <div id="paypal-cancel" style="display:none">
+        <h2>We are severly disappointed</h2>
+        <div>You shuold definitely click the paypal button again</div>
+    </div>
+    <div id="paypal-button"></div>
+    <pre id="paypal-details" style="display:none"></pre>
+    <div id="paypal-confirmation" style="display:none">
+        <h2>Confirmation</h2>
+        <form id="confirmationForm">
+            <div class="form-group">
+                <label for="firstName">First Name</label>
+                <input type="text" class="form-control" id="firstName" placeholder="First Name" name="firstName" disabled>
+            </div>
+            <div class="form-group">
+                <label for="lastName">Last Name</label>
+                <input type="text" class="form-control" id="lastName" placeholder="Last Name" name="lastName" disabled>
+            </div>
+            <div class="form-group">
+                <label for="street">Street</label>
+                <input type="text" class="form-control" id="street" placeholder="Street" name="street" disabled>
+            </div>
+            
+            <button id="submitButton" type="submit" class="btn btn-default">Place Order</button>
+        </form>
+    </div>
+    <div id="paypal-end" style="display:none">
+        <h2>Yay your payment is complete</h2>
+        <pre id="paypal-execute-details"></pre>
+    </div>
+    </div>
+    <a href="index.html">Go Back</a>
+</body>
+</html>

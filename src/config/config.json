@@ -1,4 +1,8 @@
 {
+    "cloud9": {
+        "username": "trainerbill",
+        "workspace": "training2017"
+    },
     "paypalRestConfig": {
         "mode": "sandbox",  // sandbox || live
         "client_id": "AQzwHJt9jZAyQbf-DnaqZefvbTCMammV7ZFsnW23thr9qUQX9RGMgSVbzRjxXTAODKjh2W0k6Ei4Q2m9",

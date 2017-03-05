@@ -24,6 +24,9 @@ let krakenOpts = {
         let paypalClassic = new PayPal(classicConfig);
         config.set('paypalClassic', paypalClassic);
 
+        let c9config = config.get('cloud9');
+        console.log('Visit https://' + c9config.workspace + '-' + c9config.username + '.c9users.io/');
+
         callback(null, config);
     }
 };
@@ -39,4 +42,5 @@ let server = app.listen(port, ip);
 
 server.on('listening', () => {
     console.log('Server running on ' + server.address().address + ' on port ' + server.address().port + '!');
+    
 });
