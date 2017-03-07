@@ -34,23 +34,26 @@
       // Render the login component into the loginContainer id
       // set email property
       // set onLogin property, call display user information, set globalUser to response
-      // set getUser, check if response.email then user is logged in.  Display coreect information. Set global user equal to response  
-      LoginComponent.render({
+      // set getUser, check if response.email then user is logged in.  Display coreect information. Set global user equal to response
+      var myComponent = {
           email: 'test@awesome.com',
           onLogin: function(user) {
               displayUserInformation(user);
               globalUser = user;
+              this.close();
           },
           getUser: function(user) {
             if (user.email) {
-              displayUserInformation(user);
-            } else {
-              displayLoginContainer();
+              this.hide();
             }
+
             globalUser = user;
+            displayUserInformation(globalUser);
           }
 
-      }, '#loginContainer');
+      }
+      LoginComponent.renderLightbox(myComponent);
+      
 
       // Set Logout onclick
       // Call globalUser logout
@@ -61,7 +64,7 @@
           globalUser
             .logout()
             .then(function () {
-              displayLoginContainer();
+              LoginComponent.renderLightbox(myComponent);
             });
         });
       

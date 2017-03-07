@@ -23,6 +23,7 @@
   "homepage": "https://github.com/trainerbill/ps-js-training#readme",
   "dependencies": {
     "braintree": "^2.0.2",
+    "express": "^4.15.2",
     "kraken-js": "^2.1.0",
     "paypal-classic-api": "^1.2.1",
     "paypal-rest-sdk": "^1.7.1",
