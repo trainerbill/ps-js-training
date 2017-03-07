@@ -5,6 +5,8 @@ var LoginComponent = xcomponent.create({
         width: 400,
         height: 600
     },
+    autoResize: true,
+    allowResize: true,
     props: {
         // Implement email, onLogin, getUser
         email: {

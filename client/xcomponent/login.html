@@ -35,12 +35,13 @@
       // set email property
       // set onLogin property, call display user information, set globalUser to response
       // set getUser, check if response.email then user is logged in.  Display coreect information. Set global user equal to response
-      var myComponent = {
+      LoginComponent.renderLightbox({
           email: 'test@awesome.com',
+          
           onLogin: function(user) {
               displayUserInformation(user);
               globalUser = user;
-              this.close();
+              this.hide();
           },
           getUser: function(user) {
             if (user.email) {
@@ -51,8 +52,8 @@
             displayUserInformation(globalUser);
           }
 
-      }
-      LoginComponent.renderLightbox(myComponent);
+      });
+
       
 
       // Set Logout onclick
@@ -63,9 +64,13 @@
         .addEventListener('click', function (event) {
           globalUser
             .logout()
-            .then(function () {
-              LoginComponent.renderLightbox(myComponent);
-            });
+              .then(function () {
+                LoginComponent.show();
+              
+          });
+          
+            
+          
         });
       
 
