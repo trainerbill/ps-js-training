@@ -5,10 +5,9 @@ var LoginComponent = xcomponent.create({
         width: 400,
         height: 600
     },
-    autoResize: true,
-    allowResize: true,
+    logLevel: 'debug',
     props: {
-        // Implement email, onLogin, getUser
+        // Implement email, onLogin, getUser, user
         email: {
             type: 'string',
             required: false
@@ -20,6 +19,10 @@ var LoginComponent = xcomponent.create({
         getUser: {
             type: 'function',
             required: true
+        },
+        user: {
+            type: 'object',
+            required: false
         }
     }
 });

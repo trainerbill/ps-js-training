@@ -4,7 +4,7 @@
     <title>Login Page</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-    <script src="../lib/xcomponent.js"></script> <!-- https://github.com/krakenjs/xcomponent -->
+    <script src="../lib/xcomponent/xcomponent.js"></script> <!-- https://github.com/krakenjs/xcomponent -->
     <script src="../lib/helpers.js"></script>
     <script src="login-component.js"></script> <!-- Pretend this is pulled in from our companys server -->
   </head>
@@ -27,53 +27,61 @@
 
     <script type="text/javascript">
 
-      // Exercise Setup
-      var globalUser;
-      // END Setup
-
-      // Render the login component into the loginContainer id
-      // set email property
-      // set onLogin property, call display user information, set globalUser to response
-      // set getUser, check if response.email then user is logged in.  Display coreect information. Set global user equal to response
+      // Render the login component using a lightbox
+        // set email property
+        // set onLogin property, call display user information, set globalUser to response, call this.hide() to hide the component
+        // set getUser, check if response.email then user is logged in.  Display coreect information. Set global user equal to response
       LoginComponent.renderLightbox({
+          // Implement email property
           email: 'test@awesome.com',
-          
-          onLogin: function(user) {
-              displayUserInformation(user);
-              globalUser = user;
-              this.hide();
-          },
+
+          //Implement getUser property
+            // set the message that is returned equal to the props user property (this.props.user)
+            // If email property is not undefined hide the component
+            // Call the logout defauned below.  You will have to use the .apply function to apply the this context.
+            // Call displayUserInformation with the user object
           getUser: function(user) {
-            if (user.email) {
+            this.props.user = user;
+            if (this.props.user.email) {
               this.hide();
             }
 
-            globalUser = user;
-            displayUserInformation(globalUser);
-          }
+            logout.apply(this);
+            displayUserInformation(this.props.user);
+          },
 
+          // Implement onLogin property
+            // Check message for email property.  
+            // if its set then the user is logged in
+              // Use an alert to say 'Congrats on the login'
+              // Call the getUser function passing the response
+          onLogin: function(user) {
+              if (user.email) {
+                alert('Congrats on the login');
+                this.props.getUser(user);
+              }
+          },
+          
       });
 
       
-
-      // Set Logout onclick
-      // Call globalUser logout
-      // Display login container
-      document
-        .getElementById('logoutButton')
-        .addEventListener('click', function (event) {
-          globalUser
-            .logout()
+      function logout () {
+        var component = this;
+        var user = component.props.user;
+        // Set Logout onclick
+        // Call users logout function
+        // Then use the .show method of the component to show the lightbox again.
+        document
+          .getElementById('logoutButton')
+          .addEventListener('click', function (event) {
+            user
+              .logout()
               .then(function () {
-                LoginComponent.show();
-              
+                component.show();
+              });
           });
-          
-            
-          
-        });
+      }
       
-
     </script>
 
   </body>
