@@ -266,10 +266,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	            throw new Error('Expected options.name');
 	        }
 	
-	        if (!options.window) {
-	            throw new Error('Expected options.window');
-	        }
-	
 	        if (_conf.CONFIG.MOCK_MODE) {
 	            options.window = window;
 	        } else if (typeof options.window === 'string') {
@@ -283,11 +279,26 @@ return /******/ (function(modules) { // webpackBootstrap
 	                throw new Error('Expected options.window ' + options.window + ' to be an iframe');
 	            }
 	
-	            options.window = el.contentWindow;
-	
-	            if (!options.window) {
-	                throw new Error('Expected options.window');
+	            if (!el.contentWindow) {
+	                throw new Error('Iframe must have contentWindow.  Make sure it has a src attribute and is in the DOM.');
 	            }
+	
+	            options.window = el.contentWindow;
+	        } else if (options.window instanceof HTMLElement) {
+	
+	            if (options.window.tagName.toLowerCase() !== 'iframe') {
+	                throw new Error('Expected options.window ' + options.window + ' to be an iframe');
+	            }
+	
+	            if (!options.window.contentWindow) {
+	                throw new Error('Iframe must have contentWindow.  Make sure it has a src attribute and is in the DOM.');
+	            }
+	
+	            options.window = options.window.contentWindow;
+	        }
+	
+	        if (!options.window) {
+	            throw new Error('Expected options.window to be a window object, iframe, or iframe element id.');
 	        }
 	
 	        options.domain = options.domain || '*';
@@ -2824,6 +2835,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	            _log.log.debug('Got foreign method result', obj.__name__, data.result);
 	            return data.result;
+	        }, function (err) {
+	            _log.log.debug('Got foreign method error', err.stack || err.toString());
+	            throw err;
 	        });
 	    }
 	

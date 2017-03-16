@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<head>
+
+</head>
+
+<body>
+
+    <script src="../lib/helpers.js"></script>
+
+    <!-- PayPal Script -->
+    <script src="../lib/checkout/checkout.js" data-version-4 data-paypal-checkout></script>
+
+    <script>
+        // Exercise Setup
+        function createPayment() {
+            return paypal.rest.payment.create(this.props.env, this.props.client, {
+                transactions: [
+                    {
+                        amount: {
+                            total:    '1.00',
+                            currency: 'USD'
+                        }
+                    }
+                ]
+            }); 
+        }
+        function executePayment(data, actions) {
+            return actions
+                    .payment
+                    .execute()
+                    .then(function (result) {
+                        document.getElementById('paypal-execute-details').textContent = JSON.stringify(result, null, 2);
+                        showDom('paypal-end');
+                    });
+        }
+        function onCancel() {
+            showDom('paypal-cancel');
+        }
+        function onError(err) {
+            document.getElementById('error-message').textContent = err.message;
+            showDom('paypal-error');
+        }
+
+        var client = {
+            sandbox:    'AQzwHJt9jZAyQbf-DnaqZefvbTCMammV7ZFsnW23thr9qUQX9RGMgSVbzRjxXTAODKjh2W0k6Ei4Q2m9'
+        };
+        // END Setup
+    
+        // PART 1: Complete the Integration
+            // Set the env property to 'sandbox'
+            // Set the client property to the client variable
+            // In the Error event callback call the onError function
+            // In the Cancel event callback call the onCancel function
+            // Execute the createPayment function in the correct event callback.
+            // Execute executePayment function in the correct event callback 
+        // Make sure you configure so that there is a Pay Now button on paypal.com since we are executing the payment immediately
+        // Make the button a medium, blue, rectangle
+        // DOM id is '#paypal-button'
+        paypal.Button.render({
+            env: 'sandbox',
+            client: client,
+            onError: onError,
+            onCancel: onCancel,
+            payment: createPayment,
+            onAuthorize: executePayment,
+            commit: true,
+            style: {
+                size: 'medium',
+                color: 'blue',
+                shape: 'rect'
+            }
+        }, '#paypal-button');
+    </script>
+    <div id="paypal-error" style="display:none">
+        <h2>Whoopsie Daisy</h2>
+        <div>We seem to have a problem here</div>
+        <pre id="error-message"></pre>
+    </div>
+    <div id="paypal-cancel" style="display:none">
+        <h2>We are severly disappointed</h2>
+        <div>You shuold definitely click the paypal button again</div>
+    </div>
+    <div id="paypal-button"></div>
+    <pre id="paypal-details" style="display:none"></pre>
+    <div id="paypal-confirmation" style="display:none">
+        <button id="placeOrder" class="btn btn-default">Place Order</button>
+    </div>
+    <div id="paypal-end" style="display:none">
+        <h2>Yay your payment is complete</h2>
+        <pre id="paypal-execute-details"></pre>
+    </div>
+    </div>
+    <a href="index.html">Go Back</a>
+</body>
+</html>

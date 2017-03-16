@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="en" ng-app>
+  <head>
+    <title>Login Page</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="../lib/helpers.js"></script>
+  </head>
+  <body class="container">
+    <div class="row">
+      <div class="col-md-12">
+        <div id="exerciseOutput">
+          <h2>Exercise Output</h2>
+        </div>
+        <hr />
+        <div id="loginContainer"></div>
+        <div id="userInformation" style="display:none">
+          <div id="userEmail"></div>
+          <div id="userName"></div>
+          <button id="logoutButton" class="btn btn-default">Log Out</button>
+        </div>
+        <a href="index.html">Go Back</a>
+      </div>
+    </div>
+
+    <script type="text/javascript">
+
+      //Exercise Setup.  Do Not Touch
+
+      function handleMessage(data) {
+
+        if (!data) {
+          throw new Error('Must be called with data.');
+        }
+
+        if (typeof data !== 'object') {
+          throw new Error('You must stringify first');
+        }
+
+        if (data.type === 'email') {
+          addOutput('Received Email Message');
+        } else if (data.type === 'onLogin') {
+          addOutput('Received onLogin Message');
+          displayUserInformation(data.user);
+        }
+
+      }
+
+      // Create an Iframe
+      var iframe = document.createElement('iframe');
+      iframe.height = '400px';
+      iframe.width = '400px';
+      iframe.src = 'our-login.html';
+
+      document.getElementById('loginContainer').appendChild(iframe);
+
+      // The Email message
+      var emailMessage = {
+        type: 'email',
+        message: 'test@awesome.com'
+      };
+
+      var user;
+
+      //END SETUP
+      
+      // When our iframe is loaded
+      iframe.onload = function () {
+        addOutput('Sending Email Message');
+        // PART 1: Send the emailMessage variable to the iframe.
+          // Use postMessage
+          // You must use the postMessage function on the content property of the iframe variable
+          // The message must be a string.
+          // Use "*" as the domain
+
+        iframe.contentWindow.postMessage(JSON.stringify(emailMessage), '*');
+
+        // END Part 1
+        
+       
+      };
+
+      // PART 4: 
+
+      // Create a window Event Listener for 'message';
+      // console.log the event.  console.log('login.html event', event);
+      // Parse the event data into a new variable named data.
+      // Call handleMessage function with data variable
+
+      window.addEventListener('message', function (event) {
+        var data = JSON.parse(event.data);
+        handleMessage(data);
+      });
+
+      // END PART 4
+
+      
+      
+      
+      
+    </script>
+
+  </body>
+</html>
