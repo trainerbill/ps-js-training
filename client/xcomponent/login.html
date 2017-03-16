@@ -4,7 +4,7 @@
     <title>Login Page</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-    <script src="../lib/xcomponent/xcomponent.js"></script> <!-- https://github.com/krakenjs/xcomponent -->
+    <script src="../lib/xcomponent/xcomponent.min.js"></script> <!-- https://github.com/krakenjs/xcomponent -->
     <script src="../lib/helpers.js"></script>
     <script src="login-component.js"></script> <!-- Pretend this is pulled in from our companys server -->
   </head>
@@ -26,61 +26,50 @@
     </div>
 
     <script type="text/javascript">
-
-      // Render the login component using a lightbox
-        // set email property
-        // set onLogin property, call display user information, set globalUser to response, call this.hide() to hide the component
-        // set getUser, check if response.email then user is logged in.  Display coreect information. Set global user equal to response
-      LoginComponent.renderLightbox({
-          // Implement email property
-          email: 'test@awesome.com',
-
-          //Implement getUser property
-            // set the message that is returned equal to the props user property (this.props.user)
-            // If email property is not undefined hide the component
-            // Call the logout defauned below.  You will have to use the .apply function to apply the this context.
-            // Call displayUserInformation with the user object
-          getUser: function(user) {
-            this.props.user = user;
-            if (this.props.user.email) {
-              this.hide();
-            }
-
-            logout.apply(this);
-            displayUserInformation(this.props.user);
-          },
-
-          // Implement onLogin property
-            // Check message for email property.  
-            // if its set then the user is logged in
-              // Use an alert to say 'Congrats on the login'
-              // Call the getUser function passing the response
-          onLogin: function(user) {
-              if (user.email) {
-                alert('Congrats on the login');
-                this.props.getUser(user);
-              }
-          },
-          
-      });
-
-      
-      function logout () {
+      // Setup
+      function getUser(response) {
         var component = this;
-        var user = component.props.user;
-        // Set Logout onclick
-        // Call users logout function
-        // Then use the .show method of the component to show the lightbox again.
+        this.props.user = response;
+        if (this.props.user.email) {
+          this.hide();
+        }
+
         document
           .getElementById('logoutButton')
           .addEventListener('click', function (event) {
-            user
+            component
+              .props
+              .user
               .logout()
               .then(function () {
                 component.show();
               });
           });
+
+        displayUserInformation(this.props.user);
       }
+
+      function onLogin(response) {
+        if (response.email) {
+          alert('Congrats on the login');
+          this.props.getUser(response);
+        }
+      }
+      // End Setup
+
+
+      // PART 2: Implement defined properties  on the LoginComponent renderLightbox call.
+        // Execute LoginComponent renderLightbox function with an object property.
+          // Implement email property as 'test@awesome.com'.
+          // Implement getUser property as getUser function
+          // Implement onLogin property as onLogin function
+          // Do not set user property
+      LoginComponent.renderLightbox({
+          email: 'test@awesome.com',
+          getUser: getUser,
+          onLogin: onLogin
+      });
+
       
     </script>
 

@@ -4,7 +4,7 @@
     <title>Login Page</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-    <script src="../lib/postrobot/post-robot.js"></script> <!-- https://github.com/krakenjs/post-robot -->
+    <script src="../lib/postrobot/post-robot.min.js"></script> <!-- https://github.com/krakenjs/post-robot -->
     <script src="../lib/helpers.js"></script>
   </head>
   <body class="container">
@@ -39,65 +39,93 @@
       };
 
       var user;
+
+      function handleGetUserMessage(event) {
+          addOutput('Received getUser Message');
+          user = event.data;
+          
+          if (user.email) {
+            displayUserInformation(user);
+          } else {
+            displayLoginContainer();
+          }
+      }
+
+      function handleLogoutMessage(event) {
+        addOutput('Sending Logout Message');
+        user = event.data;
+        displayLoginContainer();
+      }
+
       // End Setup
 
   
-      // Use addOutput function to add message 'Sending Email Message'
       addOutput('Sending Email Message');
 
-      // Send the emailMessage object to iframe using postRobot
-      // Use addOutput fucntion to add message 'Received Email Message' when the message has been received
-      postRobot.send(iframe, 'email', emailMessage)
-        .then(function(event) {
-            addOutput('Received Email Message');
-        });
+      // PART 1: Send Email Message
+      // Send the emailMessage object to iframe using postRobot.
+      // Pass the iframe variable as the window.
+      // Name of the message should be 'email'.
+      // When response is received
+        // Call addOutput function with 'Received Email Message'
+        // Extra Credit: Add the users email from the response to the output message.
 
-      // Listen for onLogin message from iframe
-      // Use addOutput to add 'onLogin Message Received'
-      // Set user variable equal to the response
+      postRobot
+        .send(iframe, 'email', emailMessage)
+        .then(function(event) {
+          addOutput('Received Email Message: ' + event.data.message);
+        });
+      
+      // END PART 1
+
+      // Part 4: Receive onLogin Message
+      // Use postRobot to listen for message from iframe
+        // Message name is 'onLogin'
+        // Callback should perform the following
+          // Use addOutput to add 'onLogin Message Received'
+          // Set global user variable equal to event.data
+          // execute displayUserInformation with user as the argument
+     
       postRobot.on('onLogin', function(event) {
         addOutput('onLogin Message Received');
         user = event.data;
         displayUserInformation(user);
       });
 
-      // addOutput 'Sending getUser Message'
-      // Send measse getUser using post robot
-      // Set user variable to the response
-      // User is logged in if email is not undefined
-      // If logged in execute displayUserInformation function otherwise execute displayLoginContainer function
-      // If not logged in hide login status, show iframe
+      // END PART 4
+
+      // PART 5: send getUser message
+        // Window should be iframe variable
+        // Name should be 'getUser'
+        // No data
+        // When promise resolves call handleGetUserMessage function with event
+
+      // Uncomment below function call
       addOutput('Sending getUser Message');
+
       postRobot.send(iframe, 'getUser')
-        .then(function(event) {
-            addOutput('Received getUser Message');
-            user = event.data;
-            
-            if (user.email) {
-              displayUserInformation(user);
-            } else {
-              displayLoginContainer();
-            }
-              
-        });
+        .then(handleGetUserMessage);
 
+      // END PART 5
+      
 
-
-      // Add Logout Onclick event
-      // addOutput 'Sending Logout Message'
-      // Execute user logout function
-      // on response addOutput 'Received Logout Message', set the global user to the event data, and execute displayLoginContainer
-      document.getElementById('logoutButton')
+      document
+        .getElementById('logoutButton')
         .addEventListener('click', function (event) {
-          addOutput('Sending Logout Message');
+          console.log(user);
+
+          // Part 6: Logout
+          // Execute user logout function
+          // When the promise resolves call the handleLogoutMessage with event.
+
           user
             .logout()
-            .then(function (response) {
-              addOutput('Received Logout Message');
-              user = event.data;
-              displayLoginContainer();
-            });  
+            .then(handleLogoutMessage);
+
         });
+
+      
+      
 
     </script>
 

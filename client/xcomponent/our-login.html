@@ -6,7 +6,7 @@
     <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
     <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
     <script src="//spin.js.org/spin.min.js"></script>
-    <script src="../lib/xcomponent/xcomponent.js"></script>
+    <script src="../lib/xcomponent/xcomponent.min.js"></script>
     <script src="login-component.js"></script> 
     <script src="../lib/helpers.js"></script>
   </head>
@@ -34,28 +34,29 @@
           var user = new User(localStorage.getItem('user'));
           // END Exercise Setup.
           
-          // Figure out where to get the xcomponent properties
-          // Use xcomponent to prefill email input
-          if (window.xchild.props.email) {
-              document.getElementById('exampleInputEmail1').value = window.xchild.props.email;
-          }
+          // PART 3: Implement Email xprop
+            // set email input to value of email xprop.
+          document.getElementById('exampleInputEmail1').value = window.xprops.email;
+          
+          
 
           document.getElementById('submitButton')
             .addEventListener('click', function (event) {
               event.preventDefault();
               hideDom('loginForm');
               showDom('spinner');
-              // Mock processing time for spinner
+              
               setTimeout(function () {
                 
-                // Set user object email property to input value
+                
                 user.email = document.getElementById('exampleInputEmail1').value;
-
-                // Call user login function with email
                 user.login(document.getElementById('exampleInputEmail1').value);
-
-                // Call xcomponent onLogin 
-                window.xchild.props.onLogin(user);
+                
+                
+                // PART 3: Implement onLogin xprop
+                  // call the function and send it user variable
+                window.xprops.onLogin(user);
+                
 
                 
                 hideDom('spinner');
@@ -65,10 +66,9 @@
             });
 
 
-            // Use xcomponent to send user to the parent
-            if (window.xchild.props.getUser) {
-                window.xchild.props.getUser(user);
-            }
+            // PART 3: Implement getUser xprop
+              // call the function and send it user variable
+            window.xprops.getUser(user);
               
         </script>
 

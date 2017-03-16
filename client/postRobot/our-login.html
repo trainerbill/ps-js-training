@@ -5,8 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
     <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
-    <script src="//spin.js.org/spin.min.js"></script>
-    <script src="../lib/postrobot/post-robot.js"></script> <!-- https://github.com/krakenjs/post-robot -->
+    <script src="../lib/spin.min.js"></script>
+    <script src="../lib/postrobot/post-robot.min.js"></script> <!-- https://github.com/krakenjs/post-robot -->
     <script src="../lib/helpers.js"></script>
   </head>
   <body class="container">
@@ -34,32 +34,42 @@
           // END Exercise Setup.
           
 
+          // PART 2: Listen for email message
+          // Use postRobot to listen for the 'email' message
+          // In the callback function
+            // Set the value of the HTML Form to the messaged email
+              // HINT: Look to see how this is done in the postMessage Exercise
+            // Return the data property of event
+
+          postRobot.on('email', function(event) {
+              document.getElementById('exampleInputEmail1').value = event.data.message;
+              return event.data;
+          });
+    
+          //END PART 2.
           
 
 
-          // Create a listener using postRobot to listen for the email message
-          // Set the exampleInputEmail1 input equal to the message value
-          postRobot.on('email', function(event) {
-              document.getElementById('exampleInputEmail1').value = event.data.message;
-          });
 
           document.getElementById('submitButton')
             .addEventListener('click', function (event) {
               event.preventDefault();
               hideDom('loginForm');
               showDom('spinner');
-              // Mock processing time for spinner
+              
               setTimeout(function () {
                 
-                // Set user object email property to input value
-                user.email = document.getElementById('exampleInputEmail1').value;
-
-                // Call user login function with email
                 user.login(document.getElementById('exampleInputEmail1').value);
-
-                // Send user as message to parent
+                
+                // PART 3: Send onLogin Message
+                // Use postRobot to send a message to the parent window
+                  // Message name should be 'onLogin'
+                  // Message data should be the user variable
+                  // No callback function
+                
                 postRobot.send(window.parent, 'onLogin', user);
 
+                // END PART 3
                 
                 hideDom('spinner');
                 showDom('loginForm');
@@ -67,12 +77,17 @@
               }, 2000);
             });
 
-
-            // Create a listener for getUser using postRobot
-            // Send the user object as the message
+            // PART 6: Receive getUser message
+            // Use postRobot to listen for a message
+              // Message name is 'getUser'.
+              // Callback function should return the user variable.
+            
             postRobot.on('getUser', function(event) {
                 return user;
             });
+
+            // END PART 6
+            
 
         </script>
 

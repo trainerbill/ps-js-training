@@ -7,22 +7,30 @@ var LoginComponent = xcomponent.create({
     },
     logLevel: 'debug',
     props: {
-        // Implement email, onLogin, getUser, user
+        // PART 1: Complete the login-Component.js Definition file
+            // Implement the following properties
+                // email. type is string and required is false
+                // onLogin. type is function required is false
+                // getUser. type is function required is false
+                // user.  type is object required is false
         email: {
             type: 'string',
             required: false
         },
         onLogin: {
             type: 'function',
-            required: true
+            required: false
         },
         getUser: {
             type: 'function',
-            required: true
+            required: false
         },
         user: {
             type: 'object',
             required: false
         }
+
+        // END PART 1
+        
     }
 });
