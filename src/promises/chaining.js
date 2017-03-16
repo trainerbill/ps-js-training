@@ -8,9 +8,9 @@ function async1(number) {
                 number += 6;
                 return resolve(number);
             } else {
-                return reject('Asyc1: Oops i am a reject.');
+                return reject('Async1 function rejected the promise');
             }
-        }, 2000);
+        }, 3000);
     });
 }
 
@@ -23,7 +23,7 @@ function async2(number) {
                 number += 1;
                 return resolve(number);
             } else {
-                return reject('Async 2: Oops i am a reject.');
+                return reject('Async2 function rejected the promise');
             }
         }, 2000);
     });
@@ -37,9 +37,9 @@ function async3(number) {
             if (number < 10) {
                 return resolve(number);
             } else {
-                return reject('Async 3: Oops i am a reject.');
+                return reject('Async3 function rejected the promise');
             }
-        }, 2000);
+        }, 5000);
     });
 }
 
