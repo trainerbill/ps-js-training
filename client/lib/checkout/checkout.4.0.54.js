@@ -14394,7 +14394,7 @@ var Button = exports.Button = _src2['default'].create({
     componentTemplate: _componentTemplate.componentTemplate,
 
     get version() {
-        return _config.config.ppobjects ? "4" : "4.0.54";
+        return _config.config.ppobjects ? "4.0.54" : "4.0.54";
     },
 
     get domains() {
@@ -14860,7 +14860,7 @@ var Checkout = exports.Checkout = _src2['default'].create({
     },
 
     get version() {
-        return _config.config.ppobjects ? "4" : "4.0.54";
+        return _config.config.ppobjects ? "4.0.54" : "4.0.54";
     },
 
     get domains() {
@@ -15687,7 +15687,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
 var config = exports.config = {
 
-    scriptUrl: '//www.paypalobjects.com/api/' + "checkout.js",
+    scriptUrl: '//www.paypalobjects.com/api/' + "checkout.4.0.54.js",
     legacyScriptUrl: '//www.paypalobjects.com/api/checkout.js',
 
     paypal_domain_regex: /^(https?|mock):\/\/[a-zA-Z0-9_.-]+\.paypal\.com(:\d+)?$/,
@@ -15794,7 +15794,7 @@ var config = exports.config = {
     loggerUri: '/webapps/hermes/api/logger',
 
     get postBridgeUri() {
-        return config.postBridgeUris[config.env] + '?xcomponent=1&version=' + (config.ppobjects ? "4" : "4.0.54");
+        return config.postBridgeUris[config.env] + '?xcomponent=1&version=' + (config.ppobjects ? "4.0.54" : "4.0.54");
     },
 
     paymentStandardUri: '/webapps/xorouter?cmd=_s-xclick',
@@ -19494,4 +19494,4 @@ if (currentScript) {
 /***/ })
 
 /******/ });
-//# sourceMappingURL=checkout.js.map
+//# sourceMappingURL=checkout.4.0.54.js.map
