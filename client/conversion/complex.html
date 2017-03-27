@@ -4,10 +4,7 @@
     <title>Conversion</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-    <script
-        src="https://code.jquery.com/jquery-3.1.1.min.js"
-        integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="
-        crossorigin="anonymous"></script>
+    
     
     <script src="../lib/helpers.js"></script>
   </head>
@@ -34,68 +31,14 @@
         </div>
         <div id="paypal-cancel" style="display:none">
             <h2>We are severly disappointed</h2>
-            <div>You shuold definitely click the paypal button again</div>
+            <div>You should definitely click the paypal button again</div>
         </div>
       </div>
     </div>
 
-    <script>
-        // Exercise Setup
-        function onError(err) {
-            document.getElementById('error-message').textContent = err.message;
-            showDom('paypal-error');
-        }
-        
-        function validateForm() {
-            return document.getElementById('testInput').value.length > 3;
-        }
-
-        function onAuthorize(data, actions) {
-            return actions.redirect();
-        }
-
-        function onCancel(data, actions) {
-            return actions.redirect();
-        }
-
-        let buttonConfig = [{
-            commit: true,
-            size: 'small',
-            color: 'yellow',
-            shape: 'rect',
-            id: '#paypal-button1'
-        }, {
-            commit: false,
-            size: 'medium',
-            color: 'blue',
-            shape: 'pill',
-            id: '#paypal-button2'
-        }];
-
-    
-        // END Setup
-        
-
-        // Create an on change event listener
-            // Call the validateForm() function
-            // If the form is valid show the payment methods dom id
-            // otherwise hide it.
-        
-        
-        // Create a function to take the place of the current click: property
-        // ProTip: you should be able to use something from a previous exercise.
-        
-
-        // Create the checkout.js integration
-            // Use buttonConfig for multiple buttons
-            // Configure the buttons properly
-            // Set the proper event callbacks. 
-    
-
-    </script>
-    
     <script type="text/javascript">
         // Comment me out when starting the exercise.
+        /*
         window.paypalCheckoutReady = function () {
             paypal.checkout.setup('merchantid', {
                 environment: 'sandbox',
@@ -110,8 +53,104 @@
                 }
             });
         }
+        */
     </script>
     <script src="https://www.paypalobjects.com/api/checkout.js"></script>
+
+    <script>
+        // Exercise Setup
+        function onError(err) {
+            document.getElementById('error-message').textContent = err.message;
+            showDom('paypal-error');
+        }
+    
+
+        var client = {
+            sandbox:    'AQzwHJt9jZAyQbf-DnaqZefvbTCMammV7ZFsnW23thr9qUQX9RGMgSVbzRjxXTAODKjh2W0k6Ei4Q2m9'
+        };
+
+        let buttonConfig = [{
+            commit: true,
+            size: 'small',
+            color: 'yellow',
+            shape: 'rect',
+            id: '#paypal-button1'
+        }, {
+            commit: true,
+            size: 'medium',
+            color: 'blue',
+            shape: 'pill',
+            id: '#paypal-button2'
+        }];
+
+    
+        // END Setup
+        
+        
+
+        // PART 1: Create the checkout.js integration
+            // Use buttonConfig for multiple buttons
+            // Configure the buttons properly
+            // Call the same endpoint using the paypal library
+            // Set the proper event callbacks.
+            // Call onError on Error 
+            // Redirect in the onAuthorize callback
+            // Redirect the user in the onCancel callback
+            // Make sure you use the styling and commit properties from the button config
+            
+        buttonConfig
+            .map(function (button) {
+                paypal.Button.render({
+                    env: 'sandbox',
+                    client: client,
+                    payment: function () {
+                        return paypal
+                                .request
+                                .get('/paypal/classic/setexpresscheckout')
+                                .then(function (data) {
+                                    return data.TOKEN;
+                                });
+                    },
+                    onAuthorize: function (data, actions) {
+                        return actions.redirect();
+                    },
+                    onCancel: function (data, actions) {
+                        return actions.redirect();
+                    },
+                    onError: onError,
+                    style: {
+                        size: button.size,
+                        color: button.color,
+                        shape: button.shape
+                    },
+                    commit: button.commit
+                }, button.id);
+            });
+        
+        // END PART 1
+
+        var input = document.getElementById('testInput');
+
+        // PART 2: Validate the form on change of input field
+            // Create an on change event listener
+            // execute the inputs checkValidity function
+            // If the form is valid execute showDom('paymentMethods');
+            // otherwise  hideDom('paymentMethods');
+        
+        input.addEventListener('change', function (event) {
+            if (input.checkValidity()) {
+                showDom('paymentMethods');
+            } else {
+                hideDom('paymentMethods');
+            }
+        });
+
+        // END PART 2
+    
+
+    </script>
+    
+    
     
   </body>
 </html>

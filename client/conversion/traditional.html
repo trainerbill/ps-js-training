@@ -10,18 +10,20 @@
     <div class="row">
       <div class="col-md-12">
         <h3>Traditional Conversion</h3>
-        <a id="paypal-button" href="/misc/setexpresscheckout"></a>
+        <div id="paypal-button"></div>
       </div>
     </div>
     
     <script type="text/javascript">
         // Comment me out when starting the exercise
+        /*
         window.paypalCheckoutReady = function () {
             paypal.checkout.setup('merchantid', {
                 environment: 'sandbox',
                 container: 'paypal-button'
             });
         }
+        */
     </script>
     <script src="https://www.paypalobjects.com/api/checkout.js"></script>
     
@@ -40,26 +42,44 @@
                         return data.TOKEN;
                     });
         }
+        var client = {
+            sandbox:    'AQzwHJt9jZAyQbf-DnaqZefvbTCMammV7ZFsnW23thr9qUQX9RGMgSVbzRjxXTAODKjh2W0k6Ei4Q2m9'
+        };
         // END Setup
         
+        // PART 1: Create v4 paypal-button
+            // Set environment to sandbox
+            // Set client to client variable
+            // Create a payment callback
+                // Execute AJAX GET '/paypal/classic/setexpresscheckout'
+                // Return the TOKEN
+            // Create a onAuthorize callback to redirect the user.
+            // Call onError function in onError callback
+            // Set the appropriate DOM ID
+                // Change it to a div container
+                // Remove the href
+                
 
-        
-        // Create an onAutorize Callback function
-            // Use actions to redirect the user to the RETURNURL
-            // You should return a function execution
-        function onAuthorize(data, actions) {
-            
-        }
 
-        // Create an onCancel Callback function
-            // Use actions to redirect the user to the CANCELURL
-            // You should return a function execution
-        function onCancel(data, actions) {
-            
-        }
-    
-
-        // Create the v4 integration component
+        paypal.Button.render({
+            env: 'sandbox',
+            client: client,
+            payment: function () {
+                return paypal
+                        .request
+                        .get('/paypal/classic/setexpresscheckout')
+                        .then(function (data) {
+                            return data.TOKEN;
+                        });
+            },
+            onAuthorize: function (data, actions) {
+                return actions.redirect();
+            },
+            onCancel: function (data, actions) {
+                return actions.redirect();
+            },
+            onError: onError
+        }, '#paypal-button');
         
     </script>
 

@@ -49,9 +49,8 @@
 
         var client = {
             sandbox:    'AQzwHJt9jZAyQbf-DnaqZefvbTCMammV7ZFsnW23thr9qUQX9RGMgSVbzRjxXTAODKjh2W0k6Ei4Q2m9'
-        };
+        };        
 
-        var environment = 'sandbox';
         var transaction = {
             transactions: [
                 {
@@ -69,8 +68,8 @@
             // PART 1: Complete payment function to return or resolve a REST PayID
                 // Use the paypal library to make the REST call to create payment
                 // Look at the checkout.js docs or github docs.  https://github.com/paypal/paypal-checkout/blob/master/docs/button.md
-                // Arguments to create function should be the following variables: environment, client, transaction
-            return paypal.rest.payment.create(environment, client, transaction); 
+                // You can use the transaction variable to as the third argument
+            return paypal.rest.payment.create(this.props.env, this.props.client, transaction); 
         }
 
         function onAuthorize(data, actions) {
@@ -78,6 +77,10 @@
                 // Use the information passed to this function to execute the payment.
                 // Then call the handleResponse function.
             
+            return actions
+                    .payment
+                    .execute()
+                    .then(handleResponse);
             
             // END PART 3
         }

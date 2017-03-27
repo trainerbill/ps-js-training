@@ -12,7 +12,7 @@
     </div>
     <div id="paypal-cancel" style="display:none">
         <h2>We are severly disappointed</h2>
-        <div>You should definitely click the paypal button again</div>
+        <div>You shuold definitely click the paypal button again</div>
     </div>
     <div id="paypal-button"></div>
     <pre id="paypal-details" style="display:none"></pre>
@@ -50,9 +50,9 @@
     <!-- PayPal Script -->
     <script src="https://www.paypalobjects.com/api/checkout.js" data-version-4></script>
     <!-- Braintree Scripts -->
-    <script src="https://js.braintreegateway.com/web/3.11.1/js/client.min.js"></script>
-    <script src="https://js.braintreegateway.com/web/3.11.1/js/paypal-checkout.min.js"></script>
-    <script src="https://js.braintreegateway.com/web/3.11.1/js/data-collector.min.js"></script>
+    <script src="https://js.braintreegateway.com/web/3.11.0/js/client.min.js"></script>
+    <script src="https://js.braintreegateway.com/web/3.11.0/js/paypal-checkout.min.js"></script>
+    <script src="https://js.braintreegateway.com/web/3.11.0/js/data-collector.min.js"></script>
 
     <script>
         // Exercise Setup
@@ -70,7 +70,7 @@
             showDom('paypal-end');
         }
 
-        function setupFinish(data) {
+        function formPopulate(data) {
             
             document.getElementById('paypal-details').textContent = JSON.stringify(data, null, 2);
             document.getElementById('firstName').value = data.details.firstName;
@@ -78,22 +78,22 @@
             document.getElementById('street').value = data.details.shippingAddress.line1;
             showDom('paypal-details');
             showDom('paypal-confirmation');
-            setClick(data);
+        
         }
 
-        function setClick(result) {
+        function setClick() {
             document
                 .getElementById('submitButton')
                 .addEventListener('click', function (event) {
                     event.preventDefault();
-                    transactionSale(result);
+                    transactionSale();
                 });
         }
 
-        var auth = 'sandbox_mpkhypqr_wkqn2r5yxbvdgs4r';
+        var auth = 'eyJ2ZXJzaW9uIjoyLCJhdXRob3JpemF0aW9uRmluZ2VycHJpbnQiOiIyZTJlYTg5N2VjOGEzYjg0M2IwNDg1YzIzYTk2YzcyOWNhNDFiNmQ1Njg5MjhhMzNjNjdmMDQ0ZjRhZTE5ZWVkfGNyZWF0ZWRfYXQ9MjAxNy0wMy0yM1QxOTo0MDoxMC4zMzA0NTE4MzcrMDAwMFx1MDAyNm1lcmNoYW50X2lkPXdrcW4ycjV5eGJ2ZGdzNHJcdTAwMjZwdWJsaWNfa2V5PW0zemQ4ZmdqeWp3MnA3eXIiLCJjb25maWdVcmwiOiJodHRwczovL2FwaS5zYW5kYm94LmJyYWludHJlZWdhdGV3YXkuY29tOjQ0My9tZXJjaGFudHMvd2txbjJyNXl4YnZkZ3M0ci9jbGllbnRfYXBpL3YxL2NvbmZpZ3VyYXRpb24iLCJjaGFsbGVuZ2VzIjpbXSwiZW52aXJvbm1lbnQiOiJzYW5kYm94IiwiY2xpZW50QXBpVXJsIjoiaHR0cHM6Ly9hcGkuc2FuZGJveC5icmFpbnRyZWVnYXRld2F5LmNvbTo0NDMvbWVyY2hhbnRzL3drcW4ycjV5eGJ2ZGdzNHIvY2xpZW50X2FwaSIsImFzc2V0c1VybCI6Imh0dHBzOi8vYXNzZXRzLmJyYWludHJlZWdhdGV3YXkuY29tIiwiYXV0aFVybCI6Imh0dHBzOi8vYXV0aC52ZW5tby5zYW5kYm94LmJyYWludHJlZWdhdGV3YXkuY29tIiwiYW5hbHl0aWNzIjp7InVybCI6Imh0dHBzOi8vY2xpZW50LWFuYWx5dGljcy5zYW5kYm94LmJyYWludHJlZWdhdGV3YXkuY29tL3drcW4ycjV5eGJ2ZGdzNHIifSwidGhyZWVEU2VjdXJlRW5hYmxlZCI6ZmFsc2UsInBheXBhbEVuYWJsZWQiOnRydWUsInBheXBhbCI6eyJkaXNwbGF5TmFtZSI6IkFuZHJld1RfUGF5UGFsU2FuZGJveCIsImNsaWVudElkIjoiQWJJSXRDVk5oekluS2piMlVDWGIxQ25Vb0dGa2NUNW1oVUlGbFI2U2lqZ3IwRy0tQzJRZGxSbXpYTldsZmd0VGs5TU02aWdiRE5RYmpRM28iLCJwcml2YWN5VXJsIjoiaHR0cDovL2V4YW1wbGUuY29tL3BwIiwidXNlckFncmVlbWVudFVybCI6Imh0dHA6Ly9leGFtcGxlLmNvbS90b3MiLCJiYXNlVXJsIjoiaHR0cHM6Ly9hc3NldHMuYnJhaW50cmVlZ2F0ZXdheS5jb20iLCJhc3NldHNVcmwiOiJodHRwczovL2NoZWNrb3V0LnBheXBhbC5jb20iLCJkaXJlY3RCYXNlVXJsIjpudWxsLCJhbGxvd0h0dHAiOnRydWUsImVudmlyb25tZW50Tm9OZXR3b3JrIjpmYWxzZSwiZW52aXJvbm1lbnQiOiJvZmZsaW5lIiwidW52ZXR0ZWRNZXJjaGFudCI6ZmFsc2UsImJyYWludHJlZUNsaWVudElkIjoibWFzdGVyY2xpZW50MyIsImJpbGxpbmdBZ3JlZW1lbnRzRW5hYmxlZCI6dHJ1ZSwibWVyY2hhbnRBY2NvdW50SWQiOiJwYXlwYWxzYW5kYm94IiwiY3VycmVuY3lJc29Db2RlIjoiVVNEIn0sImNvaW5iYXNlRW5hYmxlZCI6ZmFsc2UsIm1lcmNoYW50SWQiOiJ3a3FuMnI1eXhidmRnczRyIiwidmVubW8iOiJvZmYifQ==';
 
         var braintreePaypalOptions = {
-            flow: 'checkout',
+            flow: 'vault',
             intent: 'authorize',
             enableShippingAddress: true,
             currency: 'USD',
@@ -109,6 +109,7 @@
             }
         };
 
+        var paypalXO;
 
         braintree.client.create({
             authorization: auth
@@ -122,36 +123,14 @@
             braintree.paypalCheckout.create({
                 client: clientInstance
             }, function (paypalCheckoutErr, paypalCheckoutInstance) {
-
+                paypalXO = paypalCheckoutInstance;
                 var braintreeEnvironment = clientInstance.getConfiguration().gatewayConfiguration.environment;
         
                 // Start Paypal Checkout.js Javascript
                 paypal.Button.render({
-                    env: braintreeEnvironment === 'production' ? 'production' : 'sandbox',
-                    payment: function () {
-                        // PART 1: Finish the payment callback.
-                            // use paypalCheckoutInstance to execute the correct function in the braintree SDK
-                            // Argument is braintreePaypalOptions
-                            // Return the result
-                        
-                        return paypalCheckoutInstance
-                                .createPayment(braintreePaypalOptions);
-                        
-                        // END PART 1;
-                    },   
-                    onAuthorize: function (data, actions) {
-                        // PART 2: Finish onAuthorize callback
-                            // use paypalCheckoutInstance to execute the correct function in the braintree SDK
-                                // Argument is the data returned from paypal
-                                // Return the result
-                                // Then Execute setupFinish function
-
-                        return paypalCheckoutInstance
-                                .tokenizePayment(data)
-                                .then(setupFinish);
-                    
-                        // END PART 2 
-                    },
+                    env: braintreeEnvironment === 'production' ? 'production' : 'sandbox',  
+                    payment: payment, 
+                    onAuthorize: onAuthorize,
                     onCancel: onCancel,
                     onError: onError,
                     locale: checkoutJs.locale,
@@ -161,10 +140,50 @@
             });
         });
 
+        // END Setup
+
+        
+    function payment(resolve, reject) {
+        // PART 1: Finish the payment callback.
+            // use global paypalXO to execute the correct function in the braintree SDK
+                // Argument 1: braintreePaypalOptions
+                // Argument 2: callback function that gets (err, res)
+                    // if err exists then reject err
+                    // otherwise resolve the PayID
+        paypalXO.createPayment(braintreePaypalOptions, function (err, res) {
+            if (err) {
+                reject(err);
+            } else {
+                resolve(res);
+            }
+        });
+
+        // END PART 1;
+    }
+
+    var nonce;
+    function onAuthorize(data, actions) {
+        // PART 2: Finish onAuthorize callback
+            // use global paypalCheckoutInstance to execute the correct function in the braintree SDK
+                // Argument 1: data returned from paypal
+                // Argument 2: callback function
+                    // set global nonce to the nonce that is returned
+                    // Execute fromPopulate function with result as Argument
+                    // Execute setClick function
+        paypalXO.tokenizePayment(data, function (err, result) {
+            transactionSale(result.nonce)
+                .then(function () {
+                    actions.restart();
+                });
+        });
+
+        // END PART 2  
+    }
+
     
-    function transactionSale(data) {
+    function transactionSale(nonce) {
         var params = {
-            nonce: data.nonce,
+            nonce: nonce,
             amount: '10.00'
         }
         
@@ -172,7 +191,6 @@
             // use the paypal library to execute the AJAX call POST /braintree/sale/nonce
                 // Send the params variable
             // Then call the handleResponse function
-        
         return paypal
                 .request
                 .post('/braintree/sale/nonce', params)
